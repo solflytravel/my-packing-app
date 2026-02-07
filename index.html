@@ -324,15 +324,31 @@
     ];
 
     function nextStep(step) {
+        // Ensure inputs from step 1 are valid before proceeding
+        if (step === 2) {
+            const duration = document.getElementById('duration').value;
+            const weight = document.getElementById('userWeight').value;
+            if (!duration || duration < 1 || !weight || weight < 1) {
+                // We won't use alert() as per instructions. 
+                // Instead, we will highlight the error visually or just prevent movement.
+                document.getElementById('duration').style.borderColor = duration < 1 ? 'red' : '#ccc';
+                document.getElementById('userWeight').style.borderColor = weight < 1 ? 'red' : '#ccc';
+                return;
+            }
+        }
+
         document.querySelectorAll('.step-container').forEach(el => el.classList.remove('active'));
-        document.getElementById('step' + step).classList.add('active');
-        window.scrollTo(0,0);
+        const target = document.getElementById('step' + step);
+        if (target) {
+            target.classList.add('active');
+            window.scrollTo(0,0);
+        }
     }
 
     let currentList = [];
 
     function generateList() {
-        const duration = parseInt(document.getElementById('duration').value);
+        const duration = parseInt(document.getElementById('duration').value) || 7;
         const climate = document.getElementById('climate').value;
         const transit = document.getElementById('transit').value;
 
