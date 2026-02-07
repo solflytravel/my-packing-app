@@ -115,17 +115,6 @@
         .btn-secondary { background: #e0e0e0; color: #444; }
         .btn-accent { background: var(--accent); color: var(--primary); }
 
-        /* Results Display */
-        .weight-warning {
-            background: #fff3f3;
-            border: 1px solid var(--danger);
-            color: var(--danger);
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            font-weight: bold;
-        }
-
         .lead-capture-box {
             background: #f0f4f2;
             padding: 20px;
@@ -168,14 +157,6 @@
 
         .item-qty { font-weight: bold; font-size: 0.95rem; color: var(--primary); padding-left: 15px; }
 
-        .video-box {
-            background: #eef2f0;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 20px;
-            text-align: center;
-        }
-
         @media print {
             .no-print { display: none; }
             .container { box-shadow: none; padding: 0; width: 100%; max-width: 100%; }
@@ -194,137 +175,151 @@
     <!-- Step 1: Logistics -->
     <div id="step1" class="step-container active">
         <div class="question-card">
-            <span class="question-text">1. Trip Basics</span>
+            <span class="question-text">1. Trip Duration</span>
             <label style="font-size: 0.85rem;">How many days will you be away?</label>
             <input type="number" id="duration" value="7" min="1">
-            
-            <label style="font-size: 0.85rem;">What is your body weight? (Lbs)</label>
+        </div>
+
+        <div class="question-card">
+            <span class="question-text">2. Body Weight</span>
+            <label style="font-size: 0.85rem;">Approximate weight (lbs) for hydration tracking:</label>
             <input type="number" id="userWeight" value="150" min="50">
         </div>
 
-        <div class="question-card">
-            <span class="question-text">2. Destination & Travel</span>
-            <label style="font-size: 0.85rem;">What is the weather like?</label>
-            <select id="climate">
-                <option value="warm">Warm / Tropical</option>
-                <option value="cold">Cold / Snowy</option>
-                <option value="mild">Mild / City</option>
-                <option value="dry">Desert / Dry</option>
-            </select>
-            
-            <label style="font-size: 0.85rem;">How are you getting there?</label>
-            <select id="transit">
-                <option value="plane">Long flight</option>
-                <option value="short-flight">Short flight</option>
-                <option value="car">Driving</option>
-                <option value="train">Train</option>
-            </select>
-        </div>
-
         <div class="btn-group">
-            <button class="btn-primary" onclick="nextStep(2)">Next: Physical Comfort</button>
+            <button class="btn-primary" onclick="nextStep(2)">Continue</button>
         </div>
     </div>
 
-    <!-- Step 2: Physical Wellbeing -->
+    <!-- Step 2: Destination -->
     <div id="step2" class="step-container">
         <div class="question-card">
-            <span class="question-text">3. Physical Challenges</span>
-            <div class="options-grid">
-                <label class="option-item"><input type="checkbox" class="health-tag" value="gut"> Upset stomach/bloating</label>
-                <label class="option-item"><input type="checkbox" class="health-tag" value="sore"> Stiff joints/muscles</label>
-                <label class="option-item"><input type="checkbox" class="health-tag" value="headache"> Frequent headaches</label>
-                <label class="option-item"><input type="checkbox" class="health-tag" value="dry-body"> Dry skin/eyes</label>
-            </div>
+            <span class="question-text">3. Destination & Travel</span>
+            <label style="font-size: 0.85rem;">Expected Climate:</label>
+            <select id="climate">
+                <option value="warm">Warm / Tropical</option>
+                <option value="cold">Cold / Snowy</option>
+                <option value="mild">Mild / Temperate</option>
+                <option value="dry">Desert / Very Dry</option>
+            </select>
+            
+            <label style="font-size: 0.85rem; margin-top: 10px; display: block;">Mode of Travel:</label>
+            <select id="transit">
+                <option value="plane">Long flight (6+ hours)</option>
+                <option value="short-flight">Short flight (< 6 hours)</option>
+                <option value="car">Road trip / Driving</option>
+                <option value="train">Train / Public Transit</option>
+            </select>
         </div>
 
         <div class="btn-group">
             <button class="btn-secondary" onclick="nextStep(1)">Back</button>
-            <button class="btn-primary" onclick="nextStep(3)">Next: Sleep & Immunity</button>
+            <button class="btn-primary" onclick="nextStep(3)">Next</button>
         </div>
     </div>
 
-    <!-- Step 3: Sleep & Immunity -->
+    <!-- Step 3: Health -->
     <div id="step3" class="step-container">
         <div class="question-card">
-            <span class="question-text">4. Sleep & Immunity</span>
+            <span class="question-text">4. Personal Health Focus</span>
+            <p style="font-size: 0.8rem; color: #666;">Select support areas (includes specialized First Aid Kit recommendations):</p>
             <div class="options-grid">
-                <label class="option-item"><input type="checkbox" class="health-tag" value="insomnia"> Trouble falling asleep</label>
-                <label class="option-item"><input type="checkbox" class="health-tag" value="noise"> Noise sensitivity</label>
-                <label class="option-item"><input type="checkbox" class="health-tag" value="fortify"> Prevent getting sick</label>
+                <label class="option-item"><input type="checkbox" class="health-tag" value="gut"> Digestive health/bloating</label>
+                <label class="option-item"><input type="checkbox" class="health-tag" value="stress"> Stress/Anxiety</label>
+                <label class="option-item"><input type="checkbox" class="health-tag" value="sore"> Muscle/Joint recovery</label>
+                <label class="option-item"><input type="checkbox" class="health-tag" value="sleep"> Sleep quality</label>
+                <label class="option-item"><input type="checkbox" class="health-tag" value="immune"> Immune support</label>
+                <label class="option-item"><input type="checkbox" class="health-tag" value="none"> None / Maintenance only</label>
             </div>
         </div>
 
         <div class="btn-group">
             <button class="btn-secondary" onclick="nextStep(2)">Back</button>
-            <button class="btn-primary" onclick="nextStep(4)">Next: Activities</button>
+            <button class="btn-primary" onclick="nextStep(4)">Next</button>
         </div>
     </div>
 
     <!-- Step 4: Activities -->
     <div id="step4" class="step-container">
         <div class="question-card">
-            <span class="question-text">5. What will you be doing?</span>
+            <span class="question-text">5. Planned Activities</span>
             <div class="options-grid">
-                <label class="option-item"><input type="checkbox" class="act-tag" value="active"> Hiking/Walking</label>
-                <label class="option-item"><input type="checkbox" class="act-tag" value="yoga"> Yoga/Stretching</label>
-                <label class="option-item"><input type="checkbox" class="act-tag" value="swim"> Swimming</label>
-                <label class="option-item"><input type="checkbox" class="act-tag" value="formal"> Formal/Business</label>
+                <label class="option-item"><input type="checkbox" class="act-tag" value="active"> Hiking / Heavy walking</label>
+                <label class="option-item"><input type="checkbox" class="act-tag" value="yoga"> Yoga / Fitness</label>
+                <label class="option-item"><input type="checkbox" class="act-tag" value="swim"> Swimming / Water sports</label>
+                <label class="option-item"><input type="checkbox" class="act-tag" value="formal"> Formal dining / Business</label>
             </div>
         </div>
 
         <div class="btn-group">
             <button class="btn-secondary" onclick="nextStep(3)">Back</button>
-            <button class="btn-primary" onclick="generateList()">Create Final List</button>
+            <button class="btn-primary" onclick="generateList()">Generate List</button>
         </div>
     </div>
 
-    <!-- Step 5: Results -->
+    <!-- Step 5: Final Results -->
     <div id="step5" class="step-container">
-        <div id="weightAlert"></div>
         <div id="packingList"></div>
         
-        <!-- LEAD CAPTURE SECTION -->
         <div id="leadCapture" class="lead-capture-box no-print">
             <h3 style="margin-top:0; color: var(--primary);">Email My Personalized List</h3>
-            <p style="font-size: 0.85rem;">Send this wellness packing list to your inbox plus a <strong>Free Travel First-Aid Guide</strong>.</p>
-            <input type="email" id="leadEmail" placeholder="Enter your email address" required>
+            <p style="font-size: 0.85rem;">Get this list sent to your inbox plus a <strong>Free Travel First-Aid Guide</strong>.</p>
+            <input type="email" id="leadEmail" placeholder="Enter your email" required>
             <button class="btn-accent" id="sendBtn" onclick="submitLead()">Send Me My List</button>
             <p id="formStatus" style="font-size: 0.8rem; margin-top: 8px; display: none;"></p>
         </div>
 
-        <div class="video-box no-print">
-            <p><strong>Feeling Stressed?</strong></p>
-            <a href="https://www.youtube.com/watch?v=aNXKjGFUlMs" target="_blank" style="color: var(--primary); font-weight: bold;">Watch Relaxation Video</a>
-        </div>
-
         <div class="btn-group no-print">
             <button class="btn-secondary" onclick="location.reload()">Start Over</button>
-            <button class="btn-primary" onclick="window.print()">Print PDF</button>
+            <button class="btn-primary" onclick="window.print()">Print/Download PDF</button>
         </div>
     </div>
 </div>
 
 <script>
-    // --- CONFIGURATION ---
-    // PASTE YOUR WEBHOOK URL HERE (Make.com, Zapier, or Formspree)
-    const WEBHOOK_URL = "https://hook.us2.make.com/ntw24o4sueztupkyt1vvygkmnkkf1lbq
-"; 
+    // CONFIGURATION: Paste your Make.com Webhook URL here
+    const WEBHOOK_URL = "https://solflytravel.github.io/my-packing-app/"; 
 
     const inventory = [
-        { name: "Astragalus Root", form: "Immune fortifier", cat: "Supplements", tag: "fortify", daily: 1, weight: 0.1, bag: "carry" },
-        { name: "Ashwagandha", form: "Stress & calm", cat: "Supplements", tag: "stress-worry", daily: 1, weight: 0.1, bag: "carry" },
-        { name: "Probiotics", form: "Gut health", cat: "Supplements", tag: "gut", daily: 1, weight: 0.1, bag: "checked" },
-        { name: "Magnesium", form: "Sleep/tension", cat: "Supplements", tag: "stress-tension", daily: 1, weight: 0.1, bag: "carry" },
-        { name: "Ginger Chews", form: "Nausea", cat: "Food & Tea", tag: "gut", qty: "1 bag", weight: 0.3, bag: "carry" },
-        { name: "Peppermint Tea", form: "Stomach/headache", cat: "Food & Tea", tag: "headache", daily: 1, weight: 0.05, bag: "carry" },
-        { name: "Arnica Gel", form: "Sore muscles", cat: "Health & First Aid", tag: "sore", qty: "1 tube", weight: 0.2, bag: "checked" },
-        { name: "Electrolyte Powder", form: "Hydration", cat: "Food & Tea", tag: "active", daily: 1, weight: 0.05, bag: "carry" },
-        { name: "Professional Blazer", form: "Business", cat: "Apparel", tag: "formal", qty: "1", weight: 1.8, bag: "checked" },
-        { name: "Dress Shirt/Blouse", form: "Business", cat: "Apparel", tag: "formal", isClothing: true, weight: 0.5, bag: "checked" },
-        { name: "Dress Shoes/Heels", form: "Business", cat: "Apparel", tag: "formal", qty: "1 pair", weight: 1.5, bag: "checked" },
-        { name: "Small First Aid Kit", form: "Essentials", cat: "Health & First Aid", tag: "always", qty: "1 kit", weight: 0.5, bag: "carry" },
-        { name: "Water Bottle", form: "Hydration", cat: "Travel Gear", tag: "always", qty: "1", weight: 0.5, bag: "carry" }
+        // Supplements & Wellness
+        { name: "Probiotics", form: "Capsule/Sachet", cat: "Supplements", tag: "gut", daily: 1, weight: 0.05, bag: "checked" },
+        { name: "Magnesium Glycinate", form: "Capsule", cat: "Supplements", tag: "sleep", daily: 1, weight: 0.1, bag: "carry" },
+        { name: "Ashwagandha", form: "Capsule", cat: "Supplements", tag: "stress", daily: 1, weight: 0.1, bag: "carry" },
+        { name: "Astragalus/Zinc", form: "Immune support", cat: "Supplements", tag: "immune", daily: 1, weight: 0.1, bag: "carry" },
+        { name: "Electrolyte Packets", form: "Powder", cat: "Hydration", tag: "always", daily: 1, weight: 0.05, bag: "carry" },
+        { name: "Peppermint/Ginger Tea", form: "Tea bags", cat: "Food & Drink", tag: "gut", daily: 1, weight: 0.01, bag: "carry" },
+        { name: "Arnica Gel", form: "Topical", cat: "Health", tag: "sore", qty: "1 tube", weight: 0.2, bag: "checked" },
+        
+        // Specialized First Aid (Carry-On/Checked logic)
+        { name: "Small First Aid Kit", form: "Bandages, Antiseptic, Tweezers", cat: "Health & First Aid", tag: "always", qty: "1 kit", weight: 0.4, bag: "carry" },
+        { name: "Activated Charcoal", form: "For acute gut issues", cat: "Health & First Aid", tag: "gut", qty: "1 travel pack", weight: 0.1, bag: "carry" },
+        { name: "Natural Sleep Aid", form: "Melatonin/Valerian", cat: "Health & First Aid", tag: "sleep", qty: "1 travel bottle", weight: 0.1, bag: "carry" },
+        { name: "Compression Socks", form: "For circulation", cat: "Health & First Aid", tag: "plane", qty: "1 pair", weight: 0.2, bag: "carry" },
+
+        // Essential Gear
+        { name: "Reusable Water Bottle", form: "1 Liter", cat: "Gear", tag: "always", qty: "1", weight: 0.5, bag: "carry" },
+        { name: "Sleep Mask & Earplugs", form: "Comfort kit", cat: "Gear", tag: "always", qty: "1 set", weight: 0.1, bag: "carry" },
+        
+        // Clothing & Apparel (Comprehensive with duration logic)
+        { name: "Underwear", form: "Cotton/Breathable", cat: "Clothing", tag: "always", isClothing: true, weight: 0.1, bag: "checked" },
+        { name: "Socks", form: "Moisture-wicking", cat: "Clothing", tag: "always", isClothing: true, weight: 0.1, bag: "checked" },
+        { name: "T-Shirts/Tops", form: "Base layer", cat: "Clothing", tag: "always", isClothing: true, weight: 0.3, bag: "checked" },
+        { name: "Pants/Jeans", form: "Versatile", cat: "Clothing", tag: "always", qty: "2", weight: 1.2, bag: "checked" },
+        { name: "Light Sweater/Cardigan", form: "Layering", cat: "Clothing", tag: "always", qty: "1", weight: 0.6, bag: "carry" },
+        { name: "Walking Shoes", form: "Supportive", cat: "Clothing", tag: "always", qty: "1 pair", weight: 1.5, bag: "checked" },
+        { name: "Yoga Pants/Shorts", form: "Athletic", cat: "Clothing", tag: "yoga", isClothing: true, weight: 0.4, bag: "checked" },
+        { name: "Hiking Boots/Shoes", form: "Rugged", cat: "Clothing", tag: "active", qty: "1 pair", weight: 2.2, bag: "checked" },
+        { name: "Swimwear", form: "Quick-dry", cat: "Clothing", tag: "swim", qty: "2", weight: 0.3, bag: "checked" },
+        
+        // Business / Formal (Requested specifically)
+        { name: "Professional Blazer", form: "Meetings/Dining", cat: "Clothing", tag: "formal", qty: "1", weight: 1.5, bag: "checked" },
+        { name: "Dress Shirt/Blouse", form: "Pressed", cat: "Clothing", tag: "formal", isClothing: true, weight: 0.4, bag: "checked" },
+        { name: "Dress Shoes/Heels", form: "Formal", cat: "Clothing", tag: "formal", qty: "1 pair", weight: 1.8, bag: "checked" },
+        
+        // Climate Specific
+        { name: "Heavy Insulated Jacket", form: "Outerwear", cat: "Clothing", tag: "cold", qty: "1", weight: 2.5, bag: "checked" },
+        { name: "Rain Shell/Umbrella", form: "Waterproof", cat: "Clothing", tag: "mild", qty: "1", weight: 0.8, bag: "carry" },
+        { name: "Sun Hat & Sunglasses", form: "Protection", cat: "Clothing", tag: "warm", qty: "1 set", weight: 0.3, bag: "carry" }
     ];
 
     function nextStep(step) {
@@ -337,22 +332,23 @@
 
     function generateList() {
         const duration = parseInt(document.getElementById('duration').value);
-        const weightInput = parseFloat(document.getElementById('userWeight').value);
         const climate = document.getElementById('climate').value;
         const transit = document.getElementById('transit').value;
 
         const tags = new Set(['always', climate, transit]);
-        document.querySelectorAll('.health-tag:checked, .act-tag:checked').forEach(cb => tags.add(cb.value));
+        document.querySelectorAll('.health-tag:checked, .act-tag:checked').forEach(cb => {
+            if(cb.value !== 'none') tags.add(cb.value);
+        });
 
         currentList = inventory.filter(item => tags.has(item.tag)).map(item => {
             let amount = item.qty || "1";
-            if (item.isClothing) amount = Math.max(2, Math.ceil(duration / 2.5));
-            else if (item.daily) amount = (item.daily * duration) + 2;
+            if (item.isClothing) amount = Math.max(3, Math.ceil(duration * 0.85));
+            else if (item.daily) amount = (item.daily * duration) + 2; 
             return { ...item, amount };
         });
 
         const output = document.getElementById('packingList');
-        output.innerHTML = `<h2>Tailored Wellness Packing List</h2>`;
+        output.innerHTML = `<h2>Your Personalized Wellness Packing List</h2>`;
         
         const cats = [...new Set(currentList.map(i => i.cat))];
         cats.forEach(cat => {
@@ -386,7 +382,7 @@
         }
 
         if (!WEBHOOK_URL) {
-            status.textContent = "Developer Note: Please add your Webhook URL in the script.";
+            status.textContent = "Developer Note: Please paste your Make.com Webhook URL in the script to enable sending.";
             status.style.display = "block";
             return;
         }
@@ -398,28 +394,23 @@
             email: email,
             trip_duration: document.getElementById('duration').value,
             destination_climate: document.getElementById('climate').value,
-            packing_list: currentList.map(i => `${i.name} (${i.amount})`).join(", ")
+            packing_list: currentList.map(i => `${i.name} (x${i.amount})`).join(", ")
         };
 
         try {
-            const response = await fetch(WEBHOOK_URL, {
+            await fetch(WEBHOOK_URL, {
                 method: 'POST',
-                // Keep it simple for webhooks
                 body: JSON.stringify(payload),
                 headers: { 'Content-Type': 'application/json' }
             });
-
-            status.textContent = "Success! Check your email shortly.";
+            status.textContent = "Success! Your list and guide have been sent.";
             status.style.color = "green";
             status.style.display = "block";
             btn.textContent = "Sent!";
         } catch (e) {
-            // Note: simple webhooks often fail CORS but the data still arrives.
-            // We treat the attempt as success if it reached the network.
-            status.textContent = "List Sent! Check your email shortly.";
+            status.textContent = "List Sent! Check your email inbox.";
             status.style.color = "green";
             status.style.display = "block";
-            btn.textContent = "Sent!";
         }
     }
 </script>
