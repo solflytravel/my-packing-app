@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wellness Packing List Creator</title>
+    <style>
+        :root {
+            --primary: #2d4a3e;
+            --secondary: #6b8c7d;
+            --accent: #d4e09b;
+            --text: #1a1a1a;
+            --bg: #f4f7f5;
+            --white: #ffffff;
+            --shadow: 0 4px 20px rgba(0,0,0,0.08);
+            --danger: #d9534f;
+            --carryon: #e3f2fd;
+            --checked: #f5f5f5;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            margin: 0;
+            padding: 10px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--white);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+        }
+
+        h1 { color: var(--primary); margin: 0; font-size: 1.6rem; }
+        .subtitle { color: var(--secondary); margin-top: 5px; font-size: 0.95rem; }
+
+        .step-container { display: none; }
+        .step-container.active { display: block; animation: fadeIn 0.4s ease; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .question-card {
+            background: #f9f9f9;
+            padding: 18px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--secondary);
+        }
+
+        .question-text {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            display: block;
+            color: var(--primary);
+        }
+
+        input[type="number"], input[type="text"], input[type="email"], select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1rem;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+
+        .option-item input { margin-right: 12px; transform: scale(1.1); }
+
+        .btn-group { display: flex; gap: 10px; margin-top: 20px; }
+        
+        button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-secondary { background: #e0e0e0; color: #444; }
+        .btn-accent { background: var(--accent); color: var(--primary); }
+
+        /* Results Display */
+        .weight-warning {
+            background: #fff3f3;
+            border: 1px solid var(--danger);
+            color: var(--danger);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .lead-capture-box {
+            background: #f0f4f2;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+            border: 2px dashed var(--secondary);
+        }
+
+        .category-block { margin-bottom: 20px; }
+        .category-title {
+            background: var(--accent);
+            padding: 6px 12px;
+            border-radius: 5px;
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+        .item-row {
+            padding: 10px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .item-info { flex: 1; }
+        .item-name { font-weight: 500; font-size: 1rem; }
+        .item-form { font-size: 0.8rem; color: #666; display: block; }
+        
+        .badge {
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            font-weight: bold;
+            margin-left: 8px;
+        }
+        .badge-carry { background: var(--carryon); color: #0d47a1; }
+        .badge-checked { background: var(--checked); color: #616161; }
+
+        .item-qty { font-weight: bold; font-size: 0.95rem; color: var(--primary); padding-left: 15px; }
+
+        .video-box {
+            background: #eef2f0;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        @media print {
+            .no-print { display: none; }
+            .container { box-shadow: none; padding: 0; width: 100%; max-width: 100%; }
+            body { background: white; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Wellness Packing List Creator</h1>
+        <p class="subtitle">Tailored for your body, mind, and destination</p>
+    </header>
+
+    <!-- Step 1: Logistics -->
+    <div id="step1" class="step-container active">
+        <div class="question-card">
+            <span class="question-text">1. Trip Basics</span>
+            <label style="font-size: 0.85rem;">How many days will you be away?</label>
+            <input type="number" id="duration" value="7" min="1">
+            
+            <label style="font-size: 0.85rem;">What is your body weight? (Lbs)</label>
+            <input type="number" id="userWeight" value="150" min="50">
+        </div>
+
+        <div class="question-card">
+            <span class="question-text">2. Destination & Travel</span>
+            <label style="font-size: 0.85rem;">What is the weather like?</label>
+            <select id="climate">
+                <option value="warm">Warm / Tropical</option>
+                <option value="cold">Cold / Snowy</option>
+                <option value="mild">Mild / City</option>
+                <option value="dry">Desert / Dry</option>
+            </select>
+            
+            <label style="font-size: 0.85rem;">How are you getting there?</label>
+            <select id="transit">
+                <option value="plane">Long flight</option>
+                <option value="short-flight">Short flight</option>
+                <option value="car">Driving</option>
+                <option value="train">Train</option>
+            </select>
+        </div>
+
+        <div class="btn-group">
+            <button class="btn-primary" onclick="nextStep(2)">Next: Physical Comfort</button>
+        </div>
+    </div>
+
+    <!-- Step 2: Physical Wellbeing -->
+    <div id="step2" class="step-container">
+        <div class="question-card">
+            <span class="question-text">3. Physical Challenges</span>
+            <div class="options-grid">
+                <label class="option-item"><input type="checkbox" class="health-tag" value="gut"> Upset stomach/bloating</label>
+                <label class="option-item"><input type="checkbox" class="health-tag" value="sore"> Stiff joints/muscles</label>
+                <label class="option-item"><input type="checkbox" class="health-tag" value="headache"> Frequent headaches</label>
+                <label class="option-item"><input type="checkbox" class="health-tag" value="dry-body"> Dry skin/eyes</label>
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <button class="btn-secondary" onclick="nextStep(1)">Back</button>
+            <button class="btn-primary" onclick="nextStep(3)">Next: Sleep & Immunity</button>
+        </div>
+    </div>
+
+    <!-- Step 3: Sleep & Immunity -->
+    <div id="step3" class="step-container">
+        <div class="question-card">
+            <span class="question-text">4. Sleep & Immunity</span>
+            <div class="options-grid">
+                <label class="option-item"><input type="checkbox" class="health-tag" value="insomnia"> Trouble falling asleep</label>
+                <label class="option-item"><input type="checkbox" class="health-tag" value="noise"> Noise sensitivity</label>
+                <label class="option-item"><input type="checkbox" class="health-tag" value="fortify"> Prevent getting sick</label>
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <button class="btn-secondary" onclick="nextStep(2)">Back</button>
+            <button class="btn-primary" onclick="nextStep(4)">Next: Activities</button>
+        </div>
+    </div>
+
+    <!-- Step 4: Activities -->
+    <div id="step4" class="step-container">
+        <div class="question-card">
+            <span class="question-text">5. What will you be doing?</span>
+            <div class="options-grid">
+                <label class="option-item"><input type="checkbox" class="act-tag" value="active"> Hiking/Walking</label>
+                <label class="option-item"><input type="checkbox" class="act-tag" value="yoga"> Yoga/Stretching</label>
+                <label class="option-item"><input type="checkbox" class="act-tag" value="swim"> Swimming</label>
+                <label class="option-item"><input type="checkbox" class="act-tag" value="formal"> Formal/Business</label>
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <button class="btn-secondary" onclick="nextStep(3)">Back</button>
+            <button class="btn-primary" onclick="generateList()">Create Final List</button>
+        </div>
+    </div>
+
+    <!-- Step 5: Results -->
+    <div id="step5" class="step-container">
+        <div id="weightAlert"></div>
+        <div id="packingList"></div>
+        
+        <!-- LEAD CAPTURE SECTION -->
+        <div id="leadCapture" class="lead-capture-box no-print">
+            <h3 style="margin-top:0; color: var(--primary);">Email My Personalized List</h3>
+            <p style="font-size: 0.85rem;">Send this wellness packing list to your inbox plus a <strong>Free Travel First-Aid Guide</strong>.</p>
+            <input type="email" id="leadEmail" placeholder="Enter your email address" required>
+            <button class="btn-accent" id="sendBtn" onclick="submitToZapier()">Send Me My List</button>
+            <p id="formStatus" style="font-size: 0.8rem; margin-top: 8px; display: none;"></p>
+        </div>
+
+        <div class="video-box no-print">
+            <p><strong>Feeling Stressed?</strong></p>
+            <a href="https://www.youtube.com/watch?v=aNXKjGFUlMs" target="_blank" style="color: var(--primary); font-weight: bold;">Watch Relaxation Video</a>
+        </div>
+
+        <div class="btn-group no-print">
+            <button class="btn-secondary" onclick="location.reload()">Start Over</button>
+            <button class="btn-primary" onclick="window.print()">Print PDF</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- CONFIGURATION ---
+    // PASTE YOUR ZAPIER WEBHOOK URL HERE
+    const ZAPIER_WEBHOOK_URL = ""; 
+
+    const inventory = [
+        { name: "Astragalus Root", form: "Immune fortifier", cat: "Supplements", tag: "fortify", daily: 1, weight: 0.1, bag: "carry" },
+        { name: "Ashwagandha", form: "Stress & calm", cat: "Supplements", tag: "stress-worry", daily: 1, weight: 0.1, bag: "carry" },
+        { name: "Probiotics", form: "Gut health", cat: "Supplements", tag: "gut", daily: 1, weight: 0.1, bag: "checked" },
+        { name: "Magnesium", form: "Sleep/tension", cat: "Supplements", tag: "stress-tension", daily: 1, weight: 0.1, bag: "carry" },
+        { name: "Ginger Chews", form: "Nausea", cat: "Food & Tea", tag: "gut", qty: "1 bag", weight: 0.3, bag: "carry" },
+        { name: "Peppermint Tea", form: "Stomach/headache", cat: "Food & Tea", tag: "headache", daily: 1, weight: 0.05, bag: "carry" },
+        { name: "Arnica Gel", form: "Sore muscles", cat: "Health & First Aid", tag: "sore", qty: "1 tube", weight: 0.2, bag: "checked" },
+        { name: "Electrolyte Powder", form: "Hydration", cat: "Food & Tea", tag: "active", daily: 1, weight: 0.05, bag: "carry" },
+        { name: "Professional Blazer", form: "Business", cat: "Apparel", tag: "formal", qty: "1", weight: 1.8, bag: "checked" },
+        { name: "Dress Shirt/Blouse", form: "Business", cat: "Apparel", tag: "formal", isClothing: true, weight: 0.5, bag: "checked" },
+        { name: "Dress Shoes/Heels", form: "Business", cat: "Apparel", tag: "formal", qty: "1 pair", weight: 1.5, bag: "checked" },
+        { name: "Small First Aid Kit", form: "Essentials", cat: "Health & First Aid", tag: "always", qty: "1 kit", weight: 0.5, bag: "carry" },
+        { name: "Water Bottle", form: "Hydration", cat: "Travel Gear", tag: "always", qty: "1", weight: 0.5, bag: "carry" }
+    ];
+
+    function nextStep(step) {
+        document.querySelectorAll('.step-container').forEach(el => el.classList.remove('active'));
+        document.getElementById('step' + step).classList.add('active');
+        window.scrollTo(0,0);
+    }
+
+    let currentList = [];
+
+    function generateList() {
+        const duration = parseInt(document.getElementById('duration').value);
+        const weightInput = parseFloat(document.getElementById('userWeight').value);
+        const climate = document.getElementById('climate').value;
+        const transit = document.getElementById('transit').value;
+
+        const tags = new Set(['always', climate, transit]);
+        document.querySelectorAll('.health-tag:checked, .act-tag:checked').forEach(cb => tags.add(cb.value));
+
+        currentList = inventory.filter(item => tags.has(item.tag)).map(item => {
+            let amount = item.qty || "1";
+            if (item.isClothing) amount = Math.max(2, Math.ceil(duration / 2.5));
+            else if (item.daily) amount = (item.daily * duration) + 2;
+            return { ...item, amount };
+        });
+
+        const output = document.getElementById('packingList');
+        output.innerHTML = `<h2>Tailored Wellness Packing List</h2>`;
+        
+        // Group by category for display
+        const cats = [...new Set(currentList.map(i => i.cat))];
+        cats.forEach(cat => {
+            let html = `<div class="category-block"><div class="category-title">${cat}</div>`;
+            currentList.filter(i => i.cat === cat).forEach(i => {
+                html += `
+                    <div class="item-row">
+                        <div class="item-info">
+                            <span class="item-name">${i.name} <span class="badge ${i.bag === 'carry' ? 'badge-carry' : 'badge-checked'}">${i.bag}</span></span>
+                            <span class="item-form">${i.form}</span>
+                        </div>
+                        <div class="item-qty">x ${i.amount}</div>
+                    </div>`;
+            });
+            output.innerHTML += html + `</div>`;
+        });
+
+        nextStep(5);
+    }
+
+    async function submitToZapier() {
+        const email = document.getElementById('leadEmail').value;
+        const status = document.getElementById('formStatus');
+        const btn = document.getElementById('sendBtn');
+
+        if (!email || !email.includes('@')) {
+            status.textContent = "Please enter a valid email.";
+            status.style.display = "block";
+            status.style.color = "red";
+            return;
+        }
+
+        if (!ZAPIER_WEBHOOK_URL) {
+            status.textContent = "Developer Note: Please add your Zapier Webhook URL in the script.";
+            status.style.display = "block";
+            return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = "Sending...";
+
+        const payload = {
+            email: email,
+            duration: document.getElementById('duration').value,
+            climate: document.getElementById('climate').value,
+            packing_list: currentList.map(i => `${i.name} (${i.amount})`).join(", ")
+        };
+
+        try {
+            await fetch(ZAPIER_WEBHOOK_URL, {
+                method: 'POST',
+                mode: 'no-cors', // Common for simple webhooks
+                body: JSON.stringify(payload),
+                headers: { 'Content-Type': 'application/json' }
+            });
+
+            status.textContent = "Success! Check your email shortly.";
+            status.style.color = "green";
+            status.style.display = "block";
+            btn.textContent = "Sent!";
+        } catch (e) {
+            status.textContent = "Something went wrong. Try printing to PDF instead.";
+            status.style.color = "red";
+            status.style.display = "block";
+            btn.disabled = false;
+            btn.textContent = "Send Me My List";
+        }
+    }
+</script>
+
+</body>
+</html>
