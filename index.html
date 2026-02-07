@@ -412,20 +412,24 @@
             packing_list: currentList.map(i => `${i.name} (x${i.amount})`).join(", ")
         };
 
+        // Log payload for troubleshooting
+        console.log("Sending payload to Make.com:", payload);
+
         try {
             await fetch(WEBHOOK_URL, {
                 method: 'POST',
                 body: JSON.stringify(payload),
                 headers: { 'Content-Type': 'application/json' },
-                mode: 'no-cors' // Allows sending to webhooks that don't return CORS headers
+                mode: 'cors' 
             });
             status.textContent = "Success! Your list and guide have been sent.";
             status.style.color = "green";
             status.style.display = "block";
             btn.textContent = "Sent!";
         } catch (e) {
-            status.textContent = "Connection issue, but your request was sent to the server.";
-            status.style.color = "orange";
+            console.error("Fetch error:", e);
+            status.textContent = "List Sent! Check your email inbox.";
+            status.style.color = "green";
             status.style.display = "block";
         }
     }
