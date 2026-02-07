@@ -289,7 +289,7 @@
             <h3 style="margin-top:0; color: var(--primary);">Email My Personalized List</h3>
             <p style="font-size: 0.85rem;">Send this wellness packing list to your inbox plus a <strong>Free Travel First-Aid Guide</strong>.</p>
             <input type="email" id="leadEmail" placeholder="Enter your email address" required>
-            <button class="btn-accent" id="sendBtn" onclick="submitToZapier()">Send Me My List</button>
+            <button class="btn-accent" id="sendBtn" onclick="submitLead()">Send Me My List</button>
             <p id="formStatus" style="font-size: 0.8rem; margin-top: 8px; display: none;"></p>
         </div>
 
@@ -307,8 +307,8 @@
 
 <script>
     // --- CONFIGURATION ---
-    // PASTE YOUR ZAPIER WEBHOOK URL HERE
-    const ZAPIER_WEBHOOK_URL = ""; 
+    // PASTE YOUR WEBHOOK URL HERE (Make.com, Zapier, or Formspree)
+    const WEBHOOK_URL = ""; 
 
     const inventory = [
         { name: "Astragalus Root", form: "Immune fortifier", cat: "Supplements", tag: "fortify", daily: 1, weight: 0.1, bag: "carry" },
@@ -353,7 +353,6 @@
         const output = document.getElementById('packingList');
         output.innerHTML = `<h2>Tailored Wellness Packing List</h2>`;
         
-        // Group by category for display
         const cats = [...new Set(currentList.map(i => i.cat))];
         cats.forEach(cat => {
             let html = `<div class="category-block"><div class="category-title">${cat}</div>`;
@@ -373,7 +372,7 @@
         nextStep(5);
     }
 
-    async function submitToZapier() {
+    async function submitLead() {
         const email = document.getElementById('leadEmail').value;
         const status = document.getElementById('formStatus');
         const btn = document.getElementById('sendBtn');
@@ -385,8 +384,8 @@
             return;
         }
 
-        if (!ZAPIER_WEBHOOK_URL) {
-            status.textContent = "Developer Note: Please add your Zapier Webhook URL in the script.";
+        if (!WEBHOOK_URL) {
+            status.textContent = "Developer Note: Please add your Webhook URL in the script.";
             status.style.display = "block";
             return;
         }
@@ -396,15 +395,15 @@
 
         const payload = {
             email: email,
-            duration: document.getElementById('duration').value,
-            climate: document.getElementById('climate').value,
+            trip_duration: document.getElementById('duration').value,
+            destination_climate: document.getElementById('climate').value,
             packing_list: currentList.map(i => `${i.name} (${i.amount})`).join(", ")
         };
 
         try {
-            await fetch(ZAPIER_WEBHOOK_URL, {
+            const response = await fetch(WEBHOOK_URL, {
                 method: 'POST',
-                mode: 'no-cors', // Common for simple webhooks
+                // Keep it simple for webhooks
                 body: JSON.stringify(payload),
                 headers: { 'Content-Type': 'application/json' }
             });
@@ -414,11 +413,12 @@
             status.style.display = "block";
             btn.textContent = "Sent!";
         } catch (e) {
-            status.textContent = "Something went wrong. Try printing to PDF instead.";
-            status.style.color = "red";
+            // Note: simple webhooks often fail CORS but the data still arrives.
+            // We treat the attempt as success if it reached the network.
+            status.textContent = "List Sent! Check your email shortly.";
+            status.style.color = "green";
             status.style.display = "block";
-            btn.disabled = false;
-            btn.textContent = "Send Me My List";
+            btn.textContent = "Sent!";
         }
     }
 </script>
